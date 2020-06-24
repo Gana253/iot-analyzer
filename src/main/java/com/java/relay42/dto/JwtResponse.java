@@ -1,4 +1,4 @@
-package com.java.relay42.model;
+package com.java.relay42.dto;
 
 import java.io.Serializable;
 

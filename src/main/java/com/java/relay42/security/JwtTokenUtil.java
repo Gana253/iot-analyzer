@@ -2,7 +2,7 @@ package com.java.relay42.security;
 
 import com.java.relay42.exception.CustomException;
 import com.java.relay42.model.Role;
-import com.java.relay42.service.JwtUserDetailsService;
+import com.java.relay42.service.impl.JwtUserDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenUtil implements Serializable {
-    //public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
     private static final long serialVersionUID = -2550185165626007488L;
 
     @Value("${jwt.secret-key}")

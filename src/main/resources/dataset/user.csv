@@ -1,0 +1,6 @@
+UserName;email;Password;Roles
+UserA;User@domain.com;UserA;Role_Client
+UserB;UserB@domain.com;UserB;Role_Client
+UserC;UserC@domain.com;UserC;Role_Client
+UserD;UserD@domain.com;UserD;Role_Client
+admin;admin@domain.com;admin;Role_Client,Role_Admin

@@ -1,7 +1,8 @@
-package com.java.relay42.service;
+package com.java.relay42.service.impl;
 
-import com.java.relay42.jpa.repository.UserRepository;
-import com.java.relay42.model.User;
+
+import com.java.relay42.entity.User;
+import com.java.relay42.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

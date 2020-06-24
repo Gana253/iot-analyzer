@@ -3,3 +3,16 @@ server:
 
 jwt:
   secret-key: XkkTy12
+
+inputfile:
+  name: classpath:dataset/user.csv
+
+
+spring:
+  data:
+    cassandra:
+      keyspace-name: relay
+      contact-points: 127.0.0.1
+      port: 9042
+      schema-action: recreate_drop_unused
+      base-package: com.java.relay.entity

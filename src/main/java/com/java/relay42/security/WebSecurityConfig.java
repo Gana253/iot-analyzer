@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // Entry points
         http.authorizeRequests()//
                 .antMatchers("/authenticate").permitAll()//
-                // .antMatchers("/relay42/iot/collect").permitAll()
+                .antMatchers("/greetings/sse").permitAll()
                 // Disallow everything else..
                 .anyRequest().authenticated();
 
