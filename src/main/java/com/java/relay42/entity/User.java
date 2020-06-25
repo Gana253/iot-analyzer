@@ -1,36 +1,58 @@
 package com.java.relay42.entity;
 
-import com.java.relay42.model.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.java.relay42.constants.IotConstants;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.*;
-import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.util.List;
-import java.util.UUID;
-
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
-@Table("user")
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class User implements Serializable {
+@Table("user")
+public class User extends AbstractAuditingEntity implements Serializable {
     private static final long serialVersionUID = -2199168069671744980L;
-    @ElementCollection(fetch = FetchType.EAGER)
-    List<Role> roles;
+
     @PrimaryKey
-    private UUID id;
-    @Size(min = 4, max = 255, message = "Minimum username length: 4 characters")
-    @Column(unique = true, nullable = false)
-    private String username;
-    @Column(unique = false, nullable = false)
-    private String email;
-    @Size(min = 8, message = "Minimum password length: 8 characters")
+    private String id;
+
+    @NotNull
+    @Pattern(regexp = IotConstants.LOGIN_REGEX)
+    @Size(min = 1, max = 50)
+    private String login;
+
+    @JsonIgnore
+    @NotNull
+    @Size(min = 60, max = 60)
     private String password;
+
+    @Size(max = 50)
+    private String firstName;
+
+    @Size(max = 50)
+    private String lastName;
+
+    @Email
+    @Size(min = 5, max = 254)
+    private String email;
+
+    @Size(min = 2, max = 10)
+    @com.datastax.driver.mapping.annotations.Column(name = "lang_key")
+    private String langKey;
+
+    @JsonIgnore
+    private Set<String> authorities = new HashSet<>();
 }

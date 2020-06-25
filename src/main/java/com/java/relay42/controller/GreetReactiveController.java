@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 
 @RestController
 @RequestMapping
-public class GreetReactiveController{
+public class GreetReactiveController {
     @GetMapping("/greetings")
     public Publisher<Greeting> greetingPublisher() {
         Flux<Greeting> greetingFlux = Flux.<Greeting>generate(sink -> sink.next(new Greeting("Hello"))).take(50);

@@ -8,7 +8,12 @@ inputfile:
   name: classpath:dataset/user.csv
 
 
+
 spring:
+  application:
+    name: relayIotAnalyzer
+  datasource:
+    url:
   data:
     cassandra:
       keyspace-name: relay
@@ -16,3 +21,4 @@ spring:
       port: 9042
       schema-action: recreate_drop_unused
       base-package: com.java.relay.entity
+      protocolVersion: V4

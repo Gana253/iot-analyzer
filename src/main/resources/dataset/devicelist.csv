@@ -1,0 +1,4 @@
+devicename;clientname;stationame;location;unit
+Thermostat;Org1;AMS;Netherlands;Celsius
+Heart Rate Monitor;Org1;LDN;England;BRP
+Fuel Meter;Or1;PAR;France;Lt

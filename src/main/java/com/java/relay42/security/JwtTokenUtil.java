@@ -1,7 +1,6 @@
 package com.java.relay42.security;
 
 import com.java.relay42.exception.CustomException;
-import com.java.relay42.model.Role;
 import com.java.relay42.service.impl.JwtUserDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -21,8 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -43,10 +42,10 @@ public class JwtTokenUtil implements Serializable {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public String createToken(String username, List<Role> roles) {
+    public String createToken(String username, Set<String> roles) {
 
         Claims claims = Jwts.claims().setSubject(username);
-        claims.put("auth", roles.stream().map(s -> new SimpleGrantedAuthority(s.getAuthority())).filter(Objects::nonNull).collect(Collectors.toList()));
+        claims.put("auth", roles.stream().map(s -> new SimpleGrantedAuthority(s)).filter(Objects::nonNull).collect(Collectors.toList()));
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);

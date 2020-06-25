@@ -7,6 +7,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.io.IOException;
+
 
 @SpringBootApplication
 public class IotAnalyzerApplication implements CommandLineRunner {
@@ -19,9 +21,9 @@ public class IotAnalyzerApplication implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... params) {
-        iotService.loadUsers();
-        iotService.consumeIotMessage();
+    public void run(String... params) throws IOException {
+        iotService.loadUsersAndAuthorities();
+        // iotService.consumeIotMessage();
     }
 
 }

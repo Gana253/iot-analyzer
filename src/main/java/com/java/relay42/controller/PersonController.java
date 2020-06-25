@@ -12,6 +12,7 @@ import java.util.List;
 @RestController
 public class PersonController {
     private static List<Person> personList = new ArrayList<>();
+
     static {
         personList.add(new Person(1, "John"));
         personList.add(new Person(2, "Jane"));

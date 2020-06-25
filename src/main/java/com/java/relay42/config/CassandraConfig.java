@@ -7,11 +7,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.cassandra.config.AbstractCassandraConfiguration;
 import org.springframework.data.cassandra.config.CassandraEntityClassScanner;
 import org.springframework.data.cassandra.config.SchemaAction;
+import org.springframework.data.cassandra.core.convert.CassandraConverter;
+import org.springframework.data.cassandra.core.convert.MappingCassandraConverter;
 import org.springframework.data.cassandra.core.cql.keyspace.CreateKeyspaceSpecification;
 import org.springframework.data.cassandra.core.mapping.CassandraMappingContext;
+import org.springframework.data.cassandra.core.mapping.SimpleUserTypeResolver;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Configuration
@@ -71,7 +75,13 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
     public CassandraMappingContext mappingContext() throws ClassNotFoundException {
         CassandraMappingContext mappingContext = new CassandraMappingContext();
         mappingContext.setInitialEntitySet(getInitialEntitySet());
+        mappingContext.setUserTypeResolver(new SimpleUserTypeResolver(Objects.requireNonNull(cluster().getObject()), getKeyspaceName()));
         return mappingContext;
+    }
+
+    @Bean
+    public CassandraConverter converter() throws ClassNotFoundException {
+        return new MappingCassandraConverter(mappingContext());
     }
 
 
