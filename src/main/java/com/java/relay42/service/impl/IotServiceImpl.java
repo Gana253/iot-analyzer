@@ -1,13 +1,12 @@
 package com.java.relay42.service.impl;
 
 import com.datastax.driver.core.utils.UUIDs;
+import com.java.relay42.config.ProducerEnum;
+import com.java.relay42.config.StationDetailsMap;
 import com.java.relay42.dto.UserDTO;
-import com.java.relay42.entity.Authority;
 import com.java.relay42.entity.Device;
 import com.java.relay42.entity.Readings;
 import com.java.relay42.entity.ReadingsPrimaryKey;
-import com.java.relay42.model.Person;
-import com.java.relay42.repository.AuthorityRepository;
 import com.java.relay42.repository.DeviceRepository;
 import com.java.relay42.repository.ReadingsRepository;
 import com.java.relay42.service.IotService;
@@ -18,32 +17,22 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.*;
 import java.util.stream.Stream;
 
+/**
+ *
+ */
 @Service
 public class IotServiceImpl implements IotService {
 
     public static final String COMMA = ";";
 
     private static final Logger log = LoggerFactory.getLogger(IotServiceImpl.class);
-
-    private String baseUrl = "http://localhost:8085";
-
-    private WebClient client = WebClient.create(baseUrl);
-
 
     @Autowired
     private ResourceLoader resourceLoader;
@@ -55,25 +44,29 @@ public class IotServiceImpl implements IotService {
     private ReadingsRepository readingsRepository;
 
     @Autowired
-    private AuthorityRepository authorityRepository;
+    private UserService userService;
 
     @Autowired
-    private UserService userService;
+    private StationDetailsMap stationDetailsMap;
 
     @Value("${inputfile.name}")
     private String filePath; //Csv file input path
 
-
-    private static void logTime(Instant start) {
-        log.debug("Elapsed time: " + Duration.between(start, Instant.now()).toMillis() + "ms");
-    }
-
     public void loadUsersAndAuthorities() throws IOException {
         saveUserData();
-        saveAuthority();
         loadDeviceData();
-        setReading();
     }
+
+    public void buildReadingObjForPersist(Integer reading, ProducerEnum stationType) {
+        Readings readingObj = new Readings();
+        readingObj.setId(UUIDs.timeBased());
+        readingObj.setReading(Double.valueOf(reading));
+
+        readingObj.setKey(new ReadingsPrimaryKey(stationDetailsMap.getStationIdMap().get(stationType)));
+        readingsRepository.save(readingObj);
+
+    }
+
 
     private void loadDeviceData() throws IOException {
         Resource deviceResource = null;
@@ -108,6 +101,8 @@ public class IotServiceImpl implements IotService {
                                 break;
                         }
                     }
+                    //
+                    setStationDetails(device);
                     deviceRepository.save(device);
                 });
             }
@@ -115,9 +110,24 @@ public class IotServiceImpl implements IotService {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (deviceResource.isOpen()) deviceResource.readableChannel().close();
+            if (null != deviceResource) deviceResource.readableChannel().close();
         }
     }
+
+
+    private void setStationDetails(Device device) {
+        log.info("updating the tracker object with {}", device.getStationName());
+        Map<ProducerEnum, UUID> stationMap = fetchStationMap();
+        stationMap.put(ProducerEnum.valueOf(device.getDeviceName().toUpperCase()), device.getStationId());
+        stationDetailsMap.setStationIdMap(stationMap);
+    }
+
+
+    private Map<ProducerEnum, UUID> fetchStationMap() {
+
+        Map<ProducerEnum, UUID> stationMap = stationDetailsMap.getStationIdMap();
+        return null == stationMap ? new HashMap<>() : stationMap;
+    }/*
 
     public void setReading() {
         Device device = new Device();
@@ -136,49 +146,22 @@ public class IotServiceImpl implements IotService {
         readingsRepository.save(reading1);
         deviceRepository.save(device);
 
-    }
+    }*/
 
-    private Readings setReadings(UUID stationId, String value) {
+    /*private Readings setReadings(UUID stationId, String value) {
         Readings reading = new Readings();
         ReadingsPrimaryKey rPK = new ReadingsPrimaryKey();
         rPK.setStationId(stationId);
-        rPK.setId(UUIDs.timeBased());
+        reading.setId(UUIDs.timeBased());
         reading.setKey(rPK);
-        reading.setReading(value);
+        reading.setReading(new BigInteger(value));
         return reading;
     }
-
-    public void consumeIotMessage() {
-        Instant start = Instant.now();
-
-        List<Mono<Person>> list = Stream.of(1, 2, 3, 4, 5)
-                .map(i -> client.get().uri("/person/{id}", i).retrieve().bodyToMono(Person.class))
-                .collect(Collectors.toList());
-
-        Mono.when(list).block();
-    }
-
-    private void saveAuthority() {
-
-        Resource authorityResource = resourceLoader.getResource("classpath:dataset/authority.csv");
-
-        try {
-            File file = authorityResource.getFile();
-            List<String> authorityData = Files.readAllLines(file.toPath());
-
-            try (Stream<String> stream = authorityData.stream()) {
-                stream.skip(1).forEach(data -> authorityRepository.save(new Authority(data)));
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
+*/
 
 
     /**
      * Method to read the CSV file and create user list
-     *
-     * @return
      */
     private void saveUserData() throws IOException {
         Resource userResource = null;
@@ -224,7 +207,7 @@ public class IotServiceImpl implements IotService {
         } catch (IOException e) {
             log.error("Error Occurred -> {}", e.getMessage());
         } finally {
-            if (userResource.isOpen())
+            if (userResource != null)
                 userResource.readableChannel().close();
         }
     }

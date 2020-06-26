@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * Cassandra specific configuration.
+ */
 @Configuration
 public class CassandraConfig extends AbstractCassandraConfiguration {
 
@@ -59,7 +62,7 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
 
     @Override
     public String[] getEntityBasePackages() {
-        return new String[]{"com.java.relay42.entity"};
+        return new String[]{basePackages};
     }
 
 

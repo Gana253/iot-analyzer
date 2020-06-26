@@ -1,6 +1,7 @@
 package com.java.relay42.util;
 
-import com.java.relay42.constants.AuthoritiesConstants;
+
+import com.java.relay42.constants.IotConstants;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -60,7 +61,7 @@ public final class SecurityUtils {
      */
     public static boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication != null && getAuthorities(authentication).noneMatch(AuthoritiesConstants.ANONYMOUS::equals);
+        return authentication != null && getAuthorities(authentication).noneMatch(IotConstants.ANONYMOUS::equals);
     }
 
     /**

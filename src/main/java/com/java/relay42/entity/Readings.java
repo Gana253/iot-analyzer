@@ -5,6 +5,7 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * A Readings.
@@ -15,15 +16,15 @@ import java.io.Serializable;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class Readings extends AbstractAuditingEntity implements Serializable {
+public class Readings implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
 
     @PrimaryKey
     private ReadingsPrimaryKey key;
 
-    private String reading;
+    private Double reading;
 
+    private UUID id;
 
 }

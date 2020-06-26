@@ -8,7 +8,6 @@ inputfile:
   name: classpath:dataset/user.csv
 
 
-
 spring:
   application:
     name: relayIotAnalyzer
@@ -20,5 +19,12 @@ spring:
       contact-points: 127.0.0.1
       port: 9042
       schema-action: recreate_drop_unused
-      base-package: com.java.relay.entity
+      base-package: com.java.relay42.entity
       protocolVersion: V4
+
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+logging:
+  level:
+    root: INFO
