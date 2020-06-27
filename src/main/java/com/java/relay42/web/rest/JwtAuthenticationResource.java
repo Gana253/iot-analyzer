@@ -34,10 +34,9 @@ public class JwtAuthenticationResource {
      * {@code POST  /JwtRequest} : Authorize the user.
      * @param authenticationRequest  UserName and Password of the user
      * @return JwtToken if authenticated
-     * @throws Exception Throws UnAuthorized exception
      */
-    @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+    @PostMapping(value = "/authenticate")
+    public ResponseEntity<String> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername().toLowerCase(), authenticationRequest.getPassword()));
             return ResponseEntity.ok(jwtTokenUtil.createToken(authenticationRequest.getUsername().toLowerCase(), getAuthorities(authenticationRequest)));

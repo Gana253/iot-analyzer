@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 /**
- * Spring Data Cassandra repository for the Device entity.
+ * Spring Data Cassandra repository for the Sensor entity.
  */
 @SuppressWarnings("unused")
 @Repository
-public interface DeviceRepository extends CassandraRepository<Sensor, UUID> {
+public interface SensorRepository extends CassandraRepository<Sensor, UUID> {
 }

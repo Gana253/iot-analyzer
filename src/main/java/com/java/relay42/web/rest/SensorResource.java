@@ -2,7 +2,7 @@ package com.java.relay42.web.rest;
 
 import com.java.relay42.entity.Sensor;
 import com.java.relay42.exception.BadRequestAlertException;
-import com.java.relay42.repository.DeviceRepository;
+import com.java.relay42.repository.SensorRepository;
 import com.java.relay42.util.HeaderUtil;
 import com.java.relay42.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -22,95 +22,95 @@ import java.util.UUID;
  */
 @RestController
 @RequestMapping("/api")
-public class DeviceResource {
+public class SensorResource {
 
-    private static final String ENTITY_NAME = "device";
+    private static final String ENTITY_NAME = "sensor";
 
-    private final Logger log = LoggerFactory.getLogger(DeviceResource.class);
+    private final Logger log = LoggerFactory.getLogger(SensorResource.class);
 
-    private final DeviceRepository deviceRepository;
+    private final SensorRepository sensorRepository;
 
     @Value("${spring.application.name}")
     private String applicationName;
 
-    public DeviceResource(DeviceRepository deviceRepository) {
-        this.deviceRepository = deviceRepository;
+    public SensorResource(SensorRepository sensorRepository) {
+        this.sensorRepository = sensorRepository;
     }
 
     /**
-     * {@code POST  /devices} : Create a new device.
+     * {@code POST  /sensors} : Create a new sensor.
      *
-     * @param sensor the device to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new device, or with status {@code 400 (Bad Request)} if the device has already an ID.
+     * @param sensor the sensor to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new sensor, or with status {@code 400 (Bad Request)} if the sensor has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/devices")
-    public ResponseEntity<Sensor> createDevice(@RequestBody Sensor sensor) throws URISyntaxException {
-        log.debug("REST request to save Device : {}", sensor);
+    @PostMapping("/sensors")
+    public ResponseEntity<Sensor> createSensor(@RequestBody Sensor sensor) throws URISyntaxException {
+        log.debug("REST request to save Sensor : {}", sensor);
         if (sensor.getId() != null) {
-            throw new BadRequestAlertException("A new device cannot already have an ID", ENTITY_NAME, "idexists");
+            throw new BadRequestAlertException("A new sensor cannot already have an ID", ENTITY_NAME, "idexists");
         }
         sensor.setId(UUID.randomUUID());
-        Sensor result = deviceRepository.save(sensor);
-        return ResponseEntity.created(new URI("/api/devices/" + result.getId()))
+        Sensor result = sensorRepository.save(sensor);
+        return ResponseEntity.created(new URI("/api/sensors/" + result.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
                 .body(result);
     }
 
     /**
-     * {@code PUT  /devices} : Updates an existing device.
+     * {@code PUT  /sensors} : Updates an existing sensor.
      *
-     * @param sensor the device to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated device,
-     * or with status {@code 400 (Bad Request)} if the device is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the device couldn't be updated.
+     * @param sensor the sensor to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated sensor,
+     * or with status {@code 400 (Bad Request)} if the sensor is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the sensor couldn't be updated.
      */
-    @PutMapping("/devices")
-    public ResponseEntity<Sensor> updateDevice(@RequestBody Sensor sensor) {
-        log.debug("REST request to update Device : {}", sensor);
+    @PutMapping("/sensors")
+    public ResponseEntity<Sensor> updateSensor(@RequestBody Sensor sensor) {
+        log.debug("REST request to update sensor : {}", sensor);
         if (sensor.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Sensor result = deviceRepository.save(sensor);
+        Sensor result = sensorRepository.save(sensor);
         return ResponseEntity.ok()
                 .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, sensor.getId().toString()))
                 .body(result);
     }
 
     /**
-     * {@code GET  /devices} : get all the devices.
+     * {@code GET  /sensorsr} : get all the sensors.
      *
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of devices in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of sensors in body.
      */
-    @GetMapping("/devices")
-    public List<Sensor> getAllDevices() {
-        log.debug("REST request to get all Devices");
-        return deviceRepository.findAll();
+    @GetMapping("/sensors")
+    public List<Sensor> getAllSensors() {
+        log.debug("REST request to get all sensors");
+        return sensorRepository.findAll();
     }
 
     /**
-     * {@code GET  /devices/:id} : get the "id" device.
+     * {@code GET  /sensors/:id} : get the "id" sensor.
      *
-     * @param id the id of the device to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the device, or with status {@code 404 (Not Found)}.
+     * @param id the id of the sensor to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the sensor, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/devices/{id}")
-    public ResponseEntity<Sensor> getDevice(@PathVariable UUID id) {
-        log.debug("REST request to get Device : {}", id);
-        Optional<Sensor> device = deviceRepository.findById(id);
-        return ResponseUtil.wrapOrNotFound(device);
+    @GetMapping("/sensors/{id}")
+    public ResponseEntity<Sensor> getSensor(@PathVariable UUID id) {
+        log.debug("REST request to get Sensor : {}", id);
+        Optional<Sensor> sensor = sensorRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(sensor);
     }
 
     /**
-     * {@code DELETE  /devices/:id} : delete the "id" device.
+     * {@code DELETE  /sensors/:id} : delete the "id" sensor.
      *
-     * @param id the id of the device to delete.
+     * @param id the id of the sensor to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/devices/{id}")
-    public ResponseEntity<Void> deleteDevice(@PathVariable UUID id) {
-        log.debug("REST request to delete Device : {}", id);
-        deviceRepository.deleteById(id);
+    @DeleteMapping("/sensors/{id}")
+    public ResponseEntity<Void> deleteSensor(@PathVariable UUID id) {
+        log.debug("REST request to delete sensor : {}", id);
+        sensorRepository.deleteById(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
 }

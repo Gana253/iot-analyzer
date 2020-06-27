@@ -46,13 +46,13 @@ public class UserResourceIT {
     private static final String UPDATED_PASSWORD = "passdoe";
 
     private static final String DEFAULT_EMAIL = "johndoe@localhost";
-    private static final String UPDATED_EMAIL = "jhipster@localhost";
+    private static final String UPDATED_EMAIL = "johnde1@localhost";
 
     private static final String DEFAULT_FIRSTNAME = "john";
-    private static final String UPDATED_FIRSTNAME = "jhipsterFirstName";
+    private static final String UPDATED_FIRSTNAME = "johnFirstName";
 
     private static final String DEFAULT_LASTNAME = "doe";
-    private static final String UPDATED_LASTNAME = "jhipsterLastName";
+    private static final String UPDATED_LASTNAME = "johnLastName";
 
     private static final String DEFAULT_LANGKEY = "en";
     private static final String UPDATED_LANGKEY = "fr";
@@ -324,10 +324,10 @@ public class UserResourceIT {
 
         User anotherUser = new User();
         anotherUser.setId(UUID.randomUUID().toString());
-        anotherUser.setLogin("jhipster");
+        anotherUser.setLogin("john");
         anotherUser.setPassword(RandomStringUtils.random(60));
 
-        anotherUser.setEmail("jhipster@localhost");
+        anotherUser.setEmail("john@localhost");
         anotherUser.setFirstName("java");
         anotherUser.setLastName("hipster");
         anotherUser.setLangKey("en");
@@ -342,7 +342,7 @@ public class UserResourceIT {
         userDTO.setPassword(updatedUser.getPassword());
         userDTO.setFirstName(updatedUser.getFirstName());
         userDTO.setLastName(updatedUser.getLastName());
-        userDTO.setEmail("jhipster@localhost"); // this email should already be used by anotherUser
+        userDTO.setEmail("johnr@localhost"); // this email should already be used by anotherUser
         userDTO.setLangKey(updatedUser.getLangKey());
         userDTO.setAuthorities(Collections.singleton(IotConstants.USER));
 

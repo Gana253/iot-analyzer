@@ -4,10 +4,10 @@ import com.datastax.driver.core.utils.UUIDs;
 import com.java.relay42.config.ProducerEnum;
 import com.java.relay42.config.StationDetailsMap;
 import com.java.relay42.dto.UserDTO;
-import com.java.relay42.entity.Device;
+import com.java.relay42.entity.Sensor;
 import com.java.relay42.entity.Readings;
 import com.java.relay42.entity.ReadingsPrimaryKey;
-import com.java.relay42.repository.DeviceRepository;
+import com.java.relay42.repository.SensorRepository;
 import com.java.relay42.repository.ReadingsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ public class IotService {
     private ResourceLoader resourceLoader;
 
     @Autowired
-    private DeviceRepository deviceRepository;
+    private SensorRepository sensorRepository;
 
     @Autowired
     private ReadingsRepository readingsRepository;
@@ -51,24 +51,24 @@ public class IotService {
     @Value("${inputfile.user-name}")
     private String userFilePath; //Csv file input path
 
-    @Value("${inputfile.device-name}")
-    private String deviceFilePath; //Csv file input path
+    @Value("${inputfile.sensor-name}")
+    private String sensorFilePath; //Csv file input path
 
     /**
-     * Load User data and Device data on startup
+     * Load User data and Sensor data on startup
      *
      * @throws IOException when CSV file is not found
      */
-    public void loadUsersAndDeviceData() throws IOException {
+    public void loadUsersAndSensorData() throws IOException {
         saveUserData();
-        loadDeviceData();
+        loadSensorData();
     }
 
     /**
      * Assists consumer to save the reading value received.
      *
      * @param reading     Reading value and Station Type
-     * @param stationType
+     * @param stationType Thermostat/FuelReader/HearRateMachine
      */
     public void buildReadingObjForPersist(Integer reading, ProducerEnum stationType) {
         Readings readingObj = new Readings();
@@ -81,73 +81,73 @@ public class IotService {
     }
 
     /**
-     * Load device from the device.csv file and persist in table
+     * Load sensor from the sensorlist.csv file and persist in table
      *
      * @throws IOException when file is not found
      */
-    private void loadDeviceData() throws IOException {
-        Resource deviceResource = null;
+    private void loadSensorData() throws IOException {
+        Resource sensorResource = null;
 
         try {
-            deviceResource = resourceLoader.getResource(deviceFilePath);
-            File file = deviceResource.getFile();
+            sensorResource = resourceLoader.getResource(sensorFilePath);
+            File file = sensorResource.getFile();
             List<String> userData = Files.readAllLines(file.toPath());
 
             try (Stream<String> stream = userData.stream()) {
                 stream.skip(1).map(line -> line.split(COMMA)).forEach(data -> {
-                    Device device = new Device();
-                    device.setId(UUIDs.timeBased());
-                    device.setStationId(UUIDs.timeBased());
-                    device.setCreatedBy("SYSTEM");
+                    Sensor sensor = new Sensor();
+                    sensor.setId(UUIDs.timeBased());
+                    sensor.setStationId(UUIDs.timeBased());
+                    sensor.setCreatedBy("SYSTEM");
                     for (int i = 0; i < data.length; i++) {
                         switch (i) {
                             case 0:
-                                device.setDeviceName(data[i].toLowerCase());
+                                sensor.setSensorName(data[i].toLowerCase());
                                 break;
                             case 1:
-                                device.setClientName(data[i].toLowerCase());
+                                sensor.setClientName(data[i].toLowerCase());
                                 break;
                             case 2:
-                                device.setStationName(data[i].toLowerCase());
+                                sensor.setStationName(data[i].toLowerCase());
                                 break;
                             case 3:
-                                device.setLocation(data[i].toLowerCase());
+                                sensor.setLocation(data[i].toLowerCase());
                                 break;
                             default:
-                                device.setUnit(data[i].toLowerCase());
+                                sensor.setUnit(data[i].toLowerCase());
                                 break;
                         }
                     }
                     //
-                    setStationDetails(device);
-                    deviceRepository.save(device);
+                    setStationDetails(sensor);
+                    sensorRepository.save(sensor);
                 });
             }
 
         } catch (IOException e) {
-            log.error("Exception while parsing device data--", e.getMessage());
+            log.error("Exception while parsing sensor data--{}", e.getMessage());
         } finally {
-            if (null != deviceResource) deviceResource.readableChannel().close();
+            if (null != sensorResource) sensorResource.readableChannel().close();
         }
     }
 
     /**
      * Track the station details data with station id
      *
-     * @param device Device with DeviceName(Thermostat,FuelReading,HearRateReader) and Station ID
+     * @param sensor Sensor with SensorName(Thermostat,FuelReading,HearRateReader) and Station ID
      */
-    private void setStationDetails(Device device) {
-        log.info("updating the tracker object with {}", device.getStationName());
-        Map<ProducerEnum, UUID> stationMap = fetchStationMap();
-        stationMap.put(ProducerEnum.valueOf(device.getDeviceName().toUpperCase()), device.getStationId());
+    private void setStationDetails(Sensor sensor) {
+        log.info("updating the tracker object with {}", sensor.getStationName());
+        EnumMap<ProducerEnum, UUID> stationMap = fetchStationMap();
+        stationMap.put(ProducerEnum.valueOf(sensor.getSensorName().toUpperCase()), sensor.getStationId());
         stationDetailsMap.setStationIdMap(stationMap);
     }
 
 
-    private Map<ProducerEnum, UUID> fetchStationMap() {
+    private EnumMap<ProducerEnum, UUID> fetchStationMap() {
 
-        Map<ProducerEnum, UUID> stationMap = stationDetailsMap.getStationIdMap();
-        return null == stationMap ? new HashMap<>() : stationMap;
+        EnumMap<ProducerEnum, UUID> stationMap = stationDetailsMap.getStationIdMap();
+        return null == stationMap ? new EnumMap<>(ProducerEnum.class) : stationMap;
     }
 
 

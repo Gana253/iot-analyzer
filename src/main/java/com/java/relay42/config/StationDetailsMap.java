@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Map;
+import java.util.EnumMap;
 import java.util.UUID;
 
 /**
@@ -17,6 +17,6 @@ import java.util.UUID;
 @Getter
 @Setter
 public class StationDetailsMap {
-    private Map<ProducerEnum, UUID> stationIdMap;
+    private EnumMap<ProducerEnum, UUID> stationIdMap;
 
 }

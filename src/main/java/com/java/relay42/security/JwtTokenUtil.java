@@ -44,7 +44,7 @@ public class JwtTokenUtil implements Serializable {
     public String createToken(String username, Set<String> roles) {
 
         Claims claims = Jwts.claims().setSubject(username);
-        claims.put("auth", roles.stream().map(s -> new SimpleGrantedAuthority(s)).filter(Objects::nonNull).collect(Collectors.toList()));
+        claims.put("auth", roles.stream().map(SimpleGrantedAuthority::new).filter(Objects::nonNull).collect(Collectors.toList()));
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);

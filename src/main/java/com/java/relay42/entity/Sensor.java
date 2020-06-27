@@ -11,14 +11,14 @@ import java.io.Serializable;
 import java.util.UUID;
 
 /**
- * A Device entity class
+ * A Sensor entity class
  */
-@Table("device")
+@Table("sensor")
 @NoArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode
-public class Device extends AbstractAuditingEntity implements Serializable {
+public class Sensor extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -32,7 +32,7 @@ public class Device extends AbstractAuditingEntity implements Serializable {
     private String stationName;
 
 
-    private String deviceName;
+    private String sensorName;
 
     private String clientName;
 
@@ -40,7 +40,5 @@ public class Device extends AbstractAuditingEntity implements Serializable {
 
     private String unit;
 
-    /*@CassandraType(type = DataType.Name.UDT, userTypeName = "readings")
-    private Set<Readings> readings = new HashSet<>();*/
 
 }

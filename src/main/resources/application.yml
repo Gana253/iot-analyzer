@@ -6,7 +6,7 @@ jwt:
 
 inputfile:
   user-name: classpath:dataset/user.csv
-  device-name: classpath:dataset/devicelist.csv
+  sensor-name: classpath:dataset/sensorlist.csv
 
 
 spring:
@@ -29,6 +29,8 @@ spring:
 logging:
   level:
     root: INFO
-
+  file:
+    path: logs/
+    name: iotanalyzer.log
 simulate:
   sensor-data: true

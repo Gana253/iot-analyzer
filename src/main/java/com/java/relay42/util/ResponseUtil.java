@@ -16,11 +16,8 @@ public interface ResponseUtil {
     }
 
     static <X> ResponseEntity<X> wrapOrNotFound(Optional<X> maybeResponse, HttpHeaders header) {
-        return maybeResponse.map((response) -> {
-            return ResponseEntity.ok().headers(header).body(response);
-        }).orElseThrow(() -> {
-            return new ResponseStatusException(HttpStatus.NOT_FOUND);
-        });
+        return maybeResponse.map(response -> ResponseEntity.ok().headers(header).body(response))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 }
 

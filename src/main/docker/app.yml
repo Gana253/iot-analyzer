@@ -1,0 +1,19 @@
+version: '2'
+services:
+  iot-analyzer:
+    image: iot-analyzer
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+      - SPRING_PROFILES_ACTIVE=prod,swagger
+      - SPRING_DATA_CASSANDRA_CONTACTPOINTS=iotanalyzer-cassandra
+      - IOT_SLEEP=30 # gives time for other services to boot before the application
+    ports:
+      - 8080:8080
+  iot-analyzer-cassandra:
+    extends:
+      file: cassandra-cluster.yml
+      service: iot-analyzer-cassandra
+  iot-analyzer-cassandra-node:
+    image: cassandra:3.11.5
+    environment:
+      - CASSANDRA_SEEDS=iot-analyzer-cassandra

@@ -24,6 +24,8 @@ public final class HeaderUtil {
         try {
             headers.add("X-" + applicationName + "-params", URLEncoder.encode(param, StandardCharsets.UTF_8.toString()));
         } catch (UnsupportedEncodingException var5) {
+
+            log.error("UnsupportedEncodingException  exception--{}", var5.getMessage());
         }
 
         return headers;
