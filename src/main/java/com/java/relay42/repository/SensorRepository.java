@@ -1,7 +1,7 @@
 package com.java.relay42.repository;
 
 
-import com.java.relay42.entity.Device;
+import com.java.relay42.entity.Sensor;
 import org.springframework.data.cassandra.repository.CassandraRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,5 +12,5 @@ import java.util.UUID;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface DeviceRepository extends CassandraRepository<Device, UUID> {
+public interface DeviceRepository extends CassandraRepository<Sensor, UUID> {
 }
