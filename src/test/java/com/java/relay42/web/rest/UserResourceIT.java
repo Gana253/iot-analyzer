@@ -1,4 +1,4 @@
-package com.java.relay42.controller;
+package com.java.relay42.web.rest;
 
 
 import com.java.relay42.IotAnalyzerApplication;
@@ -7,6 +7,8 @@ import com.java.relay42.dto.PasswordChangeDTO;
 import com.java.relay42.dto.UserDTO;
 import com.java.relay42.entity.User;
 import com.java.relay42.repository.UserRepository;
+import com.java.relay42.web.util.TestUtil;
+import com.java.relay42.web.util.UserMapper;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -105,7 +107,7 @@ public class UserResourceIT {
         userDto.setLastName(DEFAULT_LASTNAME);
         userDto.setEmail(DEFAULT_EMAIL);
         userDto.setLangKey(DEFAULT_LANGKEY);
-        userDto.setAuthorities(Collections.singleton(IotConstants.USER));
+        userDto.setAuthorities(Collections.singleton(IotConstants.ADMIN));
 
         restUserMockMvc
                 .perform(post("/api/users").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(userDto)))
@@ -121,6 +123,7 @@ public class UserResourceIT {
                     assertThat(testUser.getLastName()).isEqualTo(DEFAULT_LASTNAME);
                     assertThat(testUser.getEmail()).isEqualTo(DEFAULT_EMAIL);
                     assertThat(testUser.getLangKey()).isEqualTo(DEFAULT_LANGKEY);
+                    assertThat(testUser.getAuthorities()).containsExactly(IotConstants.ADMIN);
                 }
         );
     }
@@ -138,11 +141,12 @@ public class UserResourceIT {
         userDto.setEmail(DEFAULT_EMAIL);
         userDto.setActivated(true);
         userDto.setLangKey(DEFAULT_LANGKEY);
-        userDto.setAuthorities(Collections.singleton(IotConstants.USER));
+        userDto.setAuthorities(Collections.singleton(IotConstants.ANONYMOUS_USER));
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restUserMockMvc
-                .perform(post("/api/users").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(userDto)))
+                .perform(post("/api/users").contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(userDto)))
                 .andExpect(status().isBadRequest());
 
         // Validate the User in the database
@@ -270,6 +274,7 @@ public class UserResourceIT {
                     assertThat(testUser.getLastName()).isEqualTo(UPDATED_LASTNAME);
                     assertThat(testUser.getEmail()).isEqualTo(UPDATED_EMAIL);
                     assertThat(testUser.getLangKey()).isEqualTo(UPDATED_LANGKEY);
+                    assertThat(testUser.getAuthorities()).containsExactly(IotConstants.USER);
                 }
         );
     }
@@ -291,7 +296,7 @@ public class UserResourceIT {
         userDTO.setLastName(UPDATED_LASTNAME);
         userDTO.setEmail(UPDATED_EMAIL);
         userDTO.setLangKey(UPDATED_LANGKEY);
-        userDTO.setAuthorities(Collections.singleton(IotConstants.USER));
+        userDTO.setAuthorities(Collections.singleton(IotConstants.ANONYMOUS_USER));
 
         restUserMockMvc
                 .perform(put("/api/users").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(userDTO)))
@@ -307,6 +312,7 @@ public class UserResourceIT {
                     assertThat(testUser.getLastName()).isEqualTo(UPDATED_LASTNAME);
                     assertThat(testUser.getEmail()).isEqualTo(UPDATED_EMAIL);
                     assertThat(testUser.getLangKey()).isEqualTo(UPDATED_LANGKEY);
+                    assertThat(testUser.getAuthorities()).containsExactly(IotConstants.ANONYMOUS_USER);;
                 }
         );
     }

@@ -1,6 +1,7 @@
 package com.java.relay42.security;
 
-import com.java.relay42.exception.CustomException;
+import com.java.relay42.exception.BadRequestAlertException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Filters incoming requests and installs a Spring Security principal if a header corresponding to a valid user is
+ * found.
+ */
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
     private JwtTokenUtil jwtTokenUtil;
@@ -29,10 +34,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Authentication auth = jwtTokenUtil.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
-        } catch (CustomException ex) {
+        } catch (BadRequestAlertException ex) {
             //this is very important, since it guarantees the user is not authenticated at all
             SecurityContextHolder.clearContext();
-            httpServletResponse.sendError(ex.getHttpStatus().value(), ex.getMessage());
+            httpServletResponse.sendError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
             return;
         }
 

@@ -1,14 +1,13 @@
 package com.java.relay42.security;
 
-import com.java.relay42.exception.CustomException;
-import com.java.relay42.service.impl.JwtUserDetailsService;
+import com.java.relay42.exception.BadRequestAlertException;
+import com.java.relay42.service.JwtUserDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -80,7 +79,7 @@ public class JwtTokenUtil implements Serializable {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            throw new CustomException("Expired or invalid JWT token", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BadRequestAlertException("Expired or invalid JWT token", "Iot Analyzer", "Token Invalid");
         }
     }
 }

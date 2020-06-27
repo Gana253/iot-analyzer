@@ -9,7 +9,8 @@ import lombok.Setter;
  * A DTO representing a password change required data - current and new password.
  */
 @NoArgsConstructor
-@AllArgsConstructor@Getter
+@AllArgsConstructor
+@Getter
 @Setter
 public class PasswordChangeDTO {
     private String currentPassword;

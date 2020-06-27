@@ -22,9 +22,7 @@ public class IotAnalyzerApplication implements CommandLineRunner {
 
     @Override
     public void run(String... params) throws IOException {
-        iotService.loadUsersAndAuthorities();
-        /*events();
-        iotService.consumeIotMessage();*/
+        iotService.loadUsersAndDeviceData();
 
     }
 

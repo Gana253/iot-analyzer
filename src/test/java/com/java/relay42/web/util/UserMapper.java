@@ -1,4 +1,4 @@
-package com.java.relay42.controller;
+package com.java.relay42.web.util;
 
 import com.java.relay42.dto.UserDTO;
 import com.java.relay42.entity.User;

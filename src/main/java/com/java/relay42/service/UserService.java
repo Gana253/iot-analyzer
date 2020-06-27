@@ -1,4 +1,4 @@
-package com.java.relay42.service.impl;
+package com.java.relay42.service;
 
 import com.java.relay42.constants.IotConstants;
 import com.java.relay42.dto.UserDTO;
@@ -53,32 +53,6 @@ public class UserService {
         return newUser;
     }
 
-
-   /* public User createUser(UserDTO userDTO) {
-        User user = new User();
-        user.setId(UUID.randomUUID().toString());
-        user.setLogin(userDTO.getLogin().toLowerCase());
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        if (userDTO.getEmail() != null) {
-            user.setEmail(userDTO.getEmail().toLowerCase());
-        }
-        if (userDTO.getLangKey() == null) {
-            user.setLangKey(IotConstants.DEFAULT_LANGUAGE); // default language
-        } else {
-            user.setLangKey(userDTO.getLangKey());
-        }
-        String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
-        user.setPassword(encryptedPassword);
-        user.setResetKey(RandomUtil.generateResetKey());
-        user.setResetDate(Instant.now());
-        user.setActivated(true);
-        user.setAuthorities(userDTO.getAuthorities());
-        userRepository.save(user);
-        log.debug("Created Information for User: {}", user);
-        return user;
-    }
-*/
 
     /**
      * Update all information for a specific user, and return the modified user.
@@ -153,7 +127,4 @@ public class UserService {
         return userRepository.findOneByLogin(login);
     }
 
-    /*public Optional<User> getUserWithAuthorities() {
-        return SecurityUtils.getCurrentUserLogin().flatMap(userRepository::findOneByLogin);
-    }*/
 }

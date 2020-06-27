@@ -1,4 +1,4 @@
-package com.java.relay42.service.impl;
+package com.java.relay42.service;
 
 
 import com.java.relay42.entity.User;
@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Authenticate a user from the database.
+ */
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
 

@@ -5,7 +5,8 @@ jwt:
   secret-key: XkkTy12
 
 inputfile:
-  name: classpath:dataset/user.csv
+  user-name: classpath:dataset/user.csv
+  device-name: classpath:dataset/devicelist.csv
 
 
 spring:

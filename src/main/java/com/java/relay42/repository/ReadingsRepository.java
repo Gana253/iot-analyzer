@@ -21,7 +21,7 @@ import java.util.UUID;
 @Repository
 public interface ReadingsRepository extends CassandraRepository<Readings, ReadingsPrimaryKey> {
     @AllowFiltering
-    @Query(value = "select * from readings where created_date > :start  and created_date < :end and station_id= :stationId;")
+    @Query(value = "select reading from readings where created_date > :start  and created_date < :end and station_id= :stationId;")
     List<ReadingValue> findAllReadingValueByKey(Instant start, Instant end, UUID stationId);
 
     @AllowFiltering

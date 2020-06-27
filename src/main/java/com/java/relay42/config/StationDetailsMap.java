@@ -9,6 +9,9 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Map to store the station details and their Id
+ */
 @Configuration("stationDetailsMap")
 @Scope(WebApplicationContext.SCOPE_APPLICATION)
 @Getter

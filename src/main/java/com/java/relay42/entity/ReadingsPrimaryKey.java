@@ -12,6 +12,9 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
 
+/**
+ * Primary for Readings Table
+ */
 @PrimaryKeyClass
 @NoArgsConstructor
 @Getter

@@ -2,7 +2,9 @@ package com.java.relay42.dto;
 
 import com.java.relay42.constants.IotConstants;
 import com.java.relay42.entity.User;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -16,8 +18,6 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
-@ToString
 public class UserDTO {
 
 

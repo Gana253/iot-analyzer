@@ -1,4 +1,4 @@
-package com.java.relay42.controller;
+package com.java.relay42.web.rest;
 
 import com.java.relay42.entity.Device;
 import com.java.relay42.exception.BadRequestAlertException;

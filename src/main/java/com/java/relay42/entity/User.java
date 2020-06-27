@@ -2,7 +2,6 @@ package com.java.relay42.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.java.relay42.constants.IotConstants;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,9 +16,10 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-
+/**
+ * User Entity
+ */
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @Table("user")

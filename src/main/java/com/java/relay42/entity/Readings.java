@@ -1,6 +1,9 @@
 package com.java.relay42.entity;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
@@ -8,11 +11,10 @@ import java.io.Serializable;
 import java.util.UUID;
 
 /**
- * A Readings.
+ * A Readings entity class
  */
 @Table("readings")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode

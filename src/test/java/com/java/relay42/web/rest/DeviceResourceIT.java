@@ -1,11 +1,11 @@
-package com.java.relay42.controller;
-
+package com.java.relay42.web.rest;
 
 
 import com.datastax.driver.core.utils.UUIDs;
 import com.java.relay42.IotAnalyzerApplication;
 import com.java.relay42.entity.Device;
 import com.java.relay42.repository.DeviceRepository;
+import com.java.relay42.web.util.TestUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = IotAnalyzerApplication.class)
 @AutoConfigureMockMvc
 @WithMockUser
-public class DeviceResourceIT  {
+public class DeviceResourceIT {
 
     private static final String DEFAULT_DEVICE_NAME = "AAAAAAAAAA";
     private static final String UPDATED_DEVICE_NAME = "BBBBBBBBBB";
@@ -42,8 +40,6 @@ public class DeviceResourceIT  {
     private static final String DEFAULT_LOCATION = "AAAAAAAAAA";
     private static final String UPDATED_LOCATION = "BBBBBBBBBB";
 
-    private static final Instant DEFAULT_CREATED_AT = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_CREATED_AT = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     private static final String DEFAULT_UNIT = "AAAAAAAAAA";
     private static final String UPDATED_UNIT = "BBBBBBBBBB";
@@ -58,7 +54,7 @@ public class DeviceResourceIT  {
 
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -68,23 +64,6 @@ public class DeviceResourceIT  {
         device.setClientName(DEFAULT_CLIENT_NAME);
         device.setLocation(DEFAULT_LOCATION);
         device.setUnit(DEFAULT_UNIT);
-        device.setStationName("AMS");
-        device.setCreatedBy("SYSTEM");
-        return device;
-    }
-    /**
-     * Create an updated entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    public static Device createUpdatedEntity() {
-
-        Device device = new Device();
-        device.setDeviceName(UPDATED_DEVICE_NAME);
-        device.setClientName(UPDATED_CLIENT_NAME);
-        device.setLocation(UPDATED_LOCATION);
-        device.setUnit(UPDATED_UNIT);
         device.setStationName("AMS");
         device.setCreatedBy("SYSTEM");
         return device;
@@ -101,9 +80,9 @@ public class DeviceResourceIT  {
         int databaseSizeBeforeCreate = deviceRepository.findAll().size();
         // Create the Device
         restDeviceMockMvc.perform(post("/api/devices")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(device)))
-            .andExpect(status().isCreated());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(device)))
+                .andExpect(status().isCreated());
 
         // Validate the Device in the database
         List<Device> deviceList = deviceRepository.findAll();
@@ -126,9 +105,9 @@ public class DeviceResourceIT  {
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restDeviceMockMvc.perform(post("/api/devices")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(device)))
-            .andExpect(status().isBadRequest());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(device)))
+                .andExpect(status().isBadRequest());
 
         // Validate the Device in the database
         List<Device> deviceList = deviceRepository.findAll();
@@ -144,15 +123,15 @@ public class DeviceResourceIT  {
 
         // Get all the deviceList
         restDeviceMockMvc.perform(get("/api/devices"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(device.getId().toString())))
-            .andExpect(jsonPath("$.[*].deviceName").value(hasItem(DEFAULT_DEVICE_NAME)))
-            .andExpect(jsonPath("$.[*].clientName").value(hasItem(DEFAULT_CLIENT_NAME)))
-            .andExpect(jsonPath("$.[*].location").value(hasItem(DEFAULT_LOCATION)))
-            .andExpect(jsonPath("$.[*].unit").value(hasItem(DEFAULT_UNIT)));
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.[*].id").value(hasItem(device.getId().toString())))
+                .andExpect(jsonPath("$.[*].deviceName").value(hasItem(DEFAULT_DEVICE_NAME)))
+                .andExpect(jsonPath("$.[*].clientName").value(hasItem(DEFAULT_CLIENT_NAME)))
+                .andExpect(jsonPath("$.[*].location").value(hasItem(DEFAULT_LOCATION)))
+                .andExpect(jsonPath("$.[*].unit").value(hasItem(DEFAULT_UNIT)));
     }
-    
+
     @Test
     public void getDevice() throws Exception {
         // Initialize the database
@@ -161,19 +140,20 @@ public class DeviceResourceIT  {
 
         // Get the device
         restDeviceMockMvc.perform(get("/api/devices/{id}", device.getId()))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.id").value(device.getId().toString()))
-            .andExpect(jsonPath("$.deviceName").value(DEFAULT_DEVICE_NAME))
-            .andExpect(jsonPath("$.clientName").value(DEFAULT_CLIENT_NAME))
-            .andExpect(jsonPath("$.location").value(DEFAULT_LOCATION))
-            .andExpect(jsonPath("$.unit").value(DEFAULT_UNIT));
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.id").value(device.getId().toString()))
+                .andExpect(jsonPath("$.deviceName").value(DEFAULT_DEVICE_NAME))
+                .andExpect(jsonPath("$.clientName").value(DEFAULT_CLIENT_NAME))
+                .andExpect(jsonPath("$.location").value(DEFAULT_LOCATION))
+                .andExpect(jsonPath("$.unit").value(DEFAULT_UNIT));
     }
+
     @Test
     public void getNonExistingDevice() throws Exception {
         // Get the device
         restDeviceMockMvc.perform(get("/api/devices/{id}", UUID.randomUUID().toString()))
-            .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -196,9 +176,9 @@ public class DeviceResourceIT  {
         updatedDevice.setCreatedBy("SYSTEM");
 
         restDeviceMockMvc.perform(put("/api/devices")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedDevice)))
-            .andExpect(status().isOk());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(updatedDevice)))
+                .andExpect(status().isOk());
 
         // Validate the Device in the database
         List<Device> deviceList = deviceRepository.findAll();
@@ -217,9 +197,9 @@ public class DeviceResourceIT  {
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restDeviceMockMvc.perform(put("/api/devices")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(device)))
-            .andExpect(status().isBadRequest());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(device)))
+                .andExpect(status().isBadRequest());
 
         // Validate the Device in the database
         List<Device> deviceList = deviceRepository.findAll();
@@ -237,8 +217,8 @@ public class DeviceResourceIT  {
 
         // Delete the device
         restDeviceMockMvc.perform(delete("/api/devices/{id}", device.getId())
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNoContent());
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
         List<Device> deviceList = deviceRepository.findAll();

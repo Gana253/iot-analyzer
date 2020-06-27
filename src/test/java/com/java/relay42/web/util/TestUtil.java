@@ -1,4 +1,4 @@
-package com.java.relay42.controller;
+package com.java.relay42.web.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;

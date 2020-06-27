@@ -8,6 +8,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Util class to create headers for the rest request
+ */
 public final class HeaderUtil {
     private static final Logger log = LoggerFactory.getLogger(HeaderUtil.class);
 
