@@ -1,9 +1,11 @@
 package com.java.relay42.exception;
 
-public class EmailAlreadyUsedException extends RuntimeException {
+import com.java.relay42.constants.ErrorConstants;
+
+public class EmailAlreadyUsedException extends BadRequestAlertException {
     private static final long serialVersionUID = 1L;
 
     public EmailAlreadyUsedException() {
-        super("Email is already in use!");
+        super(ErrorConstants.EMAIL_ALREADY_USED_TYPE, "Email is already in use!", "userManagement", "emailexists");
     }
 }

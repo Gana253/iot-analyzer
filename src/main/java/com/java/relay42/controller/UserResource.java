@@ -16,6 +16,7 @@ import com.java.relay42.util.ResponseUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,15 +55,14 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class UserResource {
     private final Logger log = LoggerFactory.getLogger(UserResource.class);
-    private final UserService userService;
-    private final UserRepository userRepository;
+
     @Value("${spring.application.name}")
     private String applicationName;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
-    public UserResource(UserService userService, UserRepository userRepository) {
-        this.userService = userService;
-        this.userRepository = userRepository;
-    }
 
     private static boolean checkPasswordLength(String password) {
         return (

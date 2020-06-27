@@ -30,4 +30,4 @@ logging:
     root: INFO
 
 simulate:
-  sensor-data: true
+  sensor-data: false

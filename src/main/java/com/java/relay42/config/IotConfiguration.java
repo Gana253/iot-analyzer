@@ -4,7 +4,9 @@ import com.java.relay42.service.IotService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -23,6 +25,7 @@ public class IotConfiguration {
     }
 
     @Bean
+    @ConditionalOnProperty(name="simulate.sensor-data", havingValue="true")
     CommandLineRunner thermostatConsumer(WebClient client) {
         return args -> client.get()
                 .uri("/temperatures")
@@ -33,6 +36,7 @@ public class IotConfiguration {
     }
 
     @Bean
+    @ConditionalOnProperty(name="simulate.sensor-data", havingValue="true")
     CommandLineRunner hearRateConsumer(WebClient client) {
         return args -> client.get()
                 .uri("/heartrate")
@@ -43,6 +47,7 @@ public class IotConfiguration {
     }
 
     @Bean
+    @ConditionalOnProperty(name="simulate.sensor-data", havingValue="true")
     CommandLineRunner fuelReadingConsumer(WebClient client) {
         return args -> client.get()
                 .uri("/fuelReading")
