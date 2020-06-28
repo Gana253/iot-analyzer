@@ -1,4 +1,4 @@
-package com.java.relay42.web.controller;
+package com.java.relay42.web.errors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;

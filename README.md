@@ -27,8 +27,7 @@ To make it simple for prototype i have used 3 tables which are shown in the imag
 Implementation based on the authorities is not implemented , it will be taken as a future task.
 Sensor:
 Sensor table will hold the Sensor details along with the Stationid, location and unit. Sensorid(Id) configured as primarykey to hold the unique 
-sensor device. In Future we can make Stationid and clientname as primary key along with id(to be made as unique for each type of Sensor)so that each 
-client can have only one unique sensor record, but many stations for which we can store the data in Readings table.
+sensor device.
 Readings:
 Readings table will hold the reading value of each stationid. So in future even if station table structure is changed values can retrieved using stationid.
 Composite Primary key createddate(Clustered) and stationid (partitioned).
@@ -96,31 +95,31 @@ Make a POST request to `/authroize` with the default admin user we loaded from u
 ```
 
 Add the JWT token you got with the above curl command as a Header parameter and make the call to get the average/max/min and median of the sensor. 
-Below are the sample curl commands for different sensor. 
+Below are the sample curl commands for different sensor. You can use sensor id from Readings table to fetch the Avg/Max/Min and median as well.
 
 ```$xslt
  curl --header "Content-Type: application/json"\
        --header "Authorization: Bearer <JWT_TOKEN>" \
-      --request POST \
-      --data ' {"fromTime":"2020-06-27T19:54:59.00Z","toTime":"2020-06-27T20:10:59.00Z","producerType":"FUELREADER"}' \
-      http://localhost:5678/relay42/iot/avg
+       --request POST \
+       --data '{"fromTime":"2020-06-28T12:09:05.00Z","toTime":"2020-06-28T12:15:05.00Z","producerType":"HEARTRATEMETER","sensorId":null}' \
+       http://localhost:5678/relay42/iot/avg
 
  curl --header "Content-Type: application/json"\
-       --header "Authorization: Bearer <JWT_TOKEN>" \
+      --header "Authorization: Bearer <JWT_TOKEN>" \
       --request POST \
-      --data ' {"fromTime":"2020-06-27T19:54:59.00Z","toTime":"2020-06-27T20:10:59.00Z","producerType":"THERMOSTAT"}' \
+      --data ' {"fromTime":"2020-06-27T19:54:59.00Z","toTime":"2020-06-27T20:10:59.00Z","producerType":"THERMOSTAT","sensorId":null}' \
       http://localhost:5678/relay42/iot/max
 
  curl --header "Content-Type: application/json"\
-       --header "Authorization: Bearer <JWT_TOKEN>" \
+      --header "Authorization: Bearer <JWT_TOKEN>" \
       --request POST \
-      --data ' {"fromTime":"2020-06-27T19:54:59.00Z","toTime":"2020-06-27T20:10:59.00Z","producerType":"FUELREADER"}' \
+      --data '{"fromTime":"2020-06-28T12:09:05.00Z","toTime":"2020-06-28T12:15:05.00Z","producerType":"HEARTRATEMETER","sensorId":null}' \
       http://localhost:5678/relay42/iot/min
 
  curl --header "Content-Type: application/json"\
-       --header "Authorization: Bearer <JWT_TOKEN>" \
+      --header "Authorization: Bearer <JWT_TOKEN>" \
       --request POST \
-      --data ' {"fromTime":"2020-06-27T19:54:59.00Z","toTime":"2020-06-27T20:10:59.00Z","producerType":"HEARTRATEMETER"}' \
+      --data '{"fromTime":"2020-06-28T12:09:05.00Z","toTime":"2020-06-28T12:15:05.00Z","producerType":"HEARTRATEMETER","sensorId":null}' \
       http://localhost:5678/relay42/iot/median
 ```
 ### Code quality
@@ -142,12 +141,23 @@ For example, to start a cassandra database in a docker container, run:
 To stop it and remove the container, run:
 
     docker-compose -f src/main/docker/cassandra.yml down
+    
+## Limitations
+1) For demo purpose , sensor stored in sensorlist.csv file can only be searched by supplying producerType as {'HeartRateMeter','Thermostat','FuelReader'}. StationDetailsMap will be populated with the stationid mapped to the sensor on startup,
+User can get Avg,Max,Min and Median by passing the Sensor type like FuelReader,HearRateMeter,Thermostat. 
+2) If we change the schema-action : create_if_not_exists in application.yml file . Previous instance data will be as it is , on top of it new sensor record will be loaded on startup.
+3) To search stationid which is created on previous run query the db directly to fetch the stationid and pass it as input for getting the Avg,Max,Min and Median
+```$xslt
+ curl --header "Content-Type: application/json"\
+      --header "Authorization: Bearer <JWT_TOKEN>" \
+      --request POST \
+      --data '{"fromTime":"2020-06-28T13:55:05.160819Z","toTime":"2020-06-28T13:56:05.160827Z","producerType":null,"sensorId":"dc5d9031-b946-11ea-b093-a59e05ea2678"}' \
+      http://localhost:5678/relay42/iot/avg
+```
+## Future Implementation
+1) we should make Stationid and clientname as primary key along with id(to be made as unique for each type of Sensor)so that each 
+   client can have only one unique sensor record, but many stations for which we can store the data in Readings table.
+2) Endpoint to fetch the station id based on the client name and  sensor name and it can be used to fetch the readings table data.
+3) SensorResource has endpoints to create/modify and delete. This can be extended to load the sensor data through endpoints than through the sensorlist.csv file.
+4) Simulation of data can be modified in such a way that for each sensor record we can produce value for each second and load it .
 
-You can also fully dockerize your application and all the services that it depends on.
-To achieve this, first build a docker image of your app by running:
-
-    ./mvnw -Pprod verify jib:dockerBuild
-
-Then run:
-
-    docker-compose -f src/main/docker/app.yml up -d

@@ -29,6 +29,9 @@ spring:
 logging:
   level:
     root: INFO
+  file:
+    path: logs/
+    name: logs/iotanalyzer.log
 
 simulate:
   sensor-data: false

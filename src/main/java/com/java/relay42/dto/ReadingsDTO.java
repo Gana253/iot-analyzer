@@ -7,6 +7,8 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * DTO for fetching the AVG,MAX,MIN,MEDIAN value of the sensor
@@ -19,4 +21,5 @@ public class ReadingsDTO implements Serializable {
     private Instant fromTime;
     private Instant toTime;
     private ProducerEnum producerType;
+    private UUID sensorId;
 }

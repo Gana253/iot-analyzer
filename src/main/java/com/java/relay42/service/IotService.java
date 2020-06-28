@@ -76,6 +76,7 @@ public class IotService {
         readingObj.setReading(Double.valueOf(reading));
 
         readingObj.setKey(new ReadingsPrimaryKey(stationDetailsMap.getStationIdMap().get(stationType)));
+        log.debug("Reading object to be store --{}",readingObj);
         readingsRepository.save(readingObj);
 
     }
@@ -120,6 +121,7 @@ public class IotService {
                     }
                     //
                     setStationDetails(sensor);
+                    log.debug("Sensor object to be stored --{}",sensor);
                     sensorRepository.save(sensor);
                 });
             }
@@ -193,6 +195,7 @@ public class IotService {
                                 break;
                         }
                     }
+                    log.debug("User object to be stored --{}",user);
                     userService.registerUser(user);
                 });
             }

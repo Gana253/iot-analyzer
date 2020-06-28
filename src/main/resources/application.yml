@@ -31,6 +31,6 @@ logging:
     root: INFO
   file:
     path: logs/
-    name: iotanalyzer.log
+    name: logs/iotanalyzer.log
 simulate:
   sensor-data: true

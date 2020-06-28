@@ -1,7 +1,5 @@
 package com.java.relay42.constants;
 
-import lombok.NoArgsConstructor;
-
 /**
  * Generic constants file for the application
  */

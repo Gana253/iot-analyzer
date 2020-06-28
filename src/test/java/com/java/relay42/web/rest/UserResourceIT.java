@@ -329,7 +329,7 @@ public class UserResourceIT {
 
         anotherUser.setEmail("john@localhost");
         anotherUser.setFirstName("java");
-        anotherUser.setLastName("hipster");
+        anotherUser.setLastName("relay");
         anotherUser.setLangKey("en");
         userRepository.save(anotherUser);
 
@@ -342,7 +342,7 @@ public class UserResourceIT {
         userDTO.setPassword(updatedUser.getPassword());
         userDTO.setFirstName(updatedUser.getFirstName());
         userDTO.setLastName(updatedUser.getLastName());
-        userDTO.setEmail("johnr@localhost"); // this email should already be used by anotherUser
+        userDTO.setEmail("john@localhost"); // this email should already be used by anotherUser
         userDTO.setLangKey(updatedUser.getLangKey());
         userDTO.setAuthorities(Collections.singleton(IotConstants.USER));
 
