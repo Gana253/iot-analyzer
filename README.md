@@ -1,9 +1,9 @@
-# IOT Analyzer Application
+## IOT Analyzer Application
 
 This application helps to process the IOT data and store it in DB. User can use the endpoint provided to fetch the Average,
 Max,Min and Median value of the Sensor readings for given time frame.
 
-# Tech Stack
+## Tech Stack
 1. Java 8
 2. Spring Boot
 3. Reactive Spring - For Simulating data
@@ -12,7 +12,7 @@ Max,Min and Median value of the Sensor readings for given time frame.
 6. Maven
 7. JWT Security
 
-# Setup
+## Setup
 
 Download the project from the github and make sure that Maven/Docker installed. If not please follow the below steps to install it.
 1. Maven Install - !(https://www.baeldung.com/install-maven-on-windows-linux-mac#:~:text=Installing%20Maven%20on%20Mac%20OS,%3A%20apache%2Dmaven%2D3.3.)
@@ -20,7 +20,7 @@ Download the project from the github and make sure that Maven/Docker installed. 
 
 Cassandra will be started in docker container automatically when you run scripts. Instructions given below
 
-#Run Scripts
+## Run Scripts
 **Build Application**
 For Building the application execute the build.sh file which is located in [scripts](scripts) folder. From the terminal run the below cmd
 ```
@@ -89,7 +89,7 @@ Below are the sample curl commands for different sensor. You can use sensor id f
 ```
 
  
-#Cassandra DB -Docker
+## Cassandra DB -Docker
 Since we have started the Cassandra as docker container. Please follow the below steps for querying the table through docker container.
 Keyspace creation and Table creation will be done automatically each time on start of the application. I configured schema-action as recreate_drop_unused by
 default in [src/main/resources/application.yml](src/main/resources/application.yml) file. Please check application.yml file for the cassandra configuration.
@@ -118,14 +118,14 @@ Now you can see terminal with cqlsh:> after this type your keyspace(relay) to ch
 ```$xslt
    use relay
 ```
-#Approach
+## Approach
 
 Reactive Spring will simulate data for Thermostat, Fuel Reader, Hear Rate Monitor Sensor for every second. Consumer will listen to the producer URI and store the 
  data to the table.Table Sensor will hold the Sensor details along with the StationId for which the readings will be stored in the Readings Table to calculate the 
 Avg/Max/Min and Median for the given time range. JWT security used for authenticating the user to access the endpoints.
 
 
-#Table Structure
+## Table Structure
 
 ![picture](TableStructure.png)
 User:
@@ -138,7 +138,7 @@ Readings:
 Readings table will hold the reading value of each stationid. So in future even if station table structure is changed values can retrieved using stationid.
 Composite Primary key createddate(Clustered) and stationid (partitioned).
 
-##Reactive Spring
+## Reactive Spring
 Spring WebFlux internally uses Project Reactor and its publisher implementations – Flux and Mono. We can achieve Publisher/Consumer concept
 using Spring Reactive. Configured 3 publisher(HearRateMeter/FuelReader/Thermostat) which will produce value for each second. Consumer will listen to the
 publisher to receive the value and store it in the table.
