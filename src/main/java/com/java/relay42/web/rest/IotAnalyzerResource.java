@@ -2,6 +2,7 @@ package com.java.relay42.web.rest;
 
 import com.java.relay42.dto.ReadingsDTO;
 import com.java.relay42.service.ReadingSerice;
+import com.java.relay42.util.IotValidatorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +28,7 @@ public class IotAnalyzerResource {
      */
     @PostMapping("/avg")
     public Double averageReadingValue(@Valid @RequestBody ReadingsDTO readings) {
+        IotValidatorUtils.validateReadingsEndpointInput(readings);
         return readingSerice.averageOfReadings(readings);
     }
     /**
@@ -36,6 +38,7 @@ public class IotAnalyzerResource {
      */
     @PostMapping("/max")
     public BigInteger maxReadingValue(@Valid @RequestBody ReadingsDTO readings) {
+        IotValidatorUtils.validateReadingsEndpointInput(readings);
         return readingSerice.maxOfReadings(readings);
     }
     /**
@@ -45,6 +48,7 @@ public class IotAnalyzerResource {
      */
     @PostMapping("/min")
     public BigInteger minReadingValue(@Valid @RequestBody ReadingsDTO readings) {
+        IotValidatorUtils.validateReadingsEndpointInput(readings);
         return readingSerice.minOfReadings(readings);
     }
     /**
@@ -54,6 +58,7 @@ public class IotAnalyzerResource {
      */
     @PostMapping("/median")
     public Double medianReadingValue(@Valid @RequestBody ReadingsDTO readings) {
+        IotValidatorUtils.validateReadingsEndpointInput(readings);
         return readingSerice.medianOfReadings(readings);
     }
 

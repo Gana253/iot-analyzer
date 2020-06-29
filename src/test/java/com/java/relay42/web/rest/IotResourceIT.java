@@ -19,6 +19,7 @@ import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 /**
  * Integration Test for the {@link IotAnalyzerResource} REST controller.
@@ -264,5 +265,154 @@ public class IotResourceIT {
                 .andExpect(status().isOk())
                 .andReturn();
         assertThat(Double.parseDouble(result.getResponse().getContentAsString())).isEqualTo(DOUBLE_15);
+    }
+
+
+    @Test
+    public void findMaxForFuelReaderWithInvalidTimeRange() throws Exception {
+        ReadingsDTO readings = new ReadingsDTO();
+        readings.setToTime(Instant.now());
+        initReadings(ProducerEnum.FUELREADER);
+        readings.setFromTime(Instant.now());
+        readings.setProducerType(ProducerEnum.FUELREADER);
+
+
+       iotMockMVC
+                .perform(post("/relay42/iot/max")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(readings)))
+                .andExpect(status().isBadRequest())
+               .andExpect(jsonPath("$.title").value("Invalid Time Range passed"))
+               .andExpect(jsonPath("$.errorKey").value("End time cannot be before the Start time"));
+    }
+
+
+
+    @Test
+    public void findMaxWithNoProducerTypeAndStationId() throws Exception {
+        ReadingsDTO readings = new ReadingsDTO();
+        readings.setToTime(Instant.now());
+        initReadings(ProducerEnum.FUELREADER);
+        readings.setFromTime(Instant.now());
+
+
+        iotMockMVC
+                .perform(post("/relay42/iot/max")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(readings)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Invalid input passed"))
+                .andExpect(jsonPath("$.errorKey").value("SensorId and ProducerType cannot be empty"));
+    }
+
+    @Test
+    public void findAvgForFuelReaderWithInvalidTimeRange() throws Exception {
+        ReadingsDTO readings = new ReadingsDTO();
+        readings.setToTime(Instant.now());
+        initReadings(ProducerEnum.FUELREADER);
+        readings.setFromTime(Instant.now());
+        readings.setProducerType(ProducerEnum.FUELREADER);
+
+
+        iotMockMVC
+                .perform(post("/relay42/iot/avg")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(readings)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Invalid Time Range passed"))
+                .andExpect(jsonPath("$.errorKey").value("End time cannot be before the Start time"));
+    }
+
+
+
+    @Test
+    public void findAvgWithNoProducerTypeAndStationId() throws Exception {
+        ReadingsDTO readings = new ReadingsDTO();
+        readings.setToTime(Instant.now());
+        initReadings(ProducerEnum.FUELREADER);
+        readings.setFromTime(Instant.now());
+
+
+        iotMockMVC
+                .perform(post("/relay42/iot/avg")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(readings)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Invalid input passed"))
+                .andExpect(jsonPath("$.errorKey").value("SensorId and ProducerType cannot be empty"));
+    }
+
+    @Test
+    public void findMinForFuelReaderWithInvalidTimeRange() throws Exception {
+        ReadingsDTO readings = new ReadingsDTO();
+        readings.setToTime(Instant.now());
+        initReadings(ProducerEnum.FUELREADER);
+        readings.setFromTime(Instant.now());
+        readings.setProducerType(ProducerEnum.FUELREADER);
+
+
+        iotMockMVC
+                .perform(post("/relay42/iot/min")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(readings)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Invalid Time Range passed"))
+                .andExpect(jsonPath("$.errorKey").value("End time cannot be before the Start time"));
+    }
+
+
+
+    @Test
+    public void findMinWithNoProducerTypeAndStationId() throws Exception {
+        ReadingsDTO readings = new ReadingsDTO();
+        readings.setToTime(Instant.now());
+        initReadings(ProducerEnum.FUELREADER);
+        readings.setFromTime(Instant.now());
+
+
+        iotMockMVC
+                .perform(post("/relay42/iot/min")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(readings)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Invalid input passed"))
+                .andExpect(jsonPath("$.errorKey").value("SensorId and ProducerType cannot be empty"));
+    }
+
+    @Test
+    public void findMedianForFuelReaderWithInvalidTimeRange() throws Exception {
+        ReadingsDTO readings = new ReadingsDTO();
+        readings.setToTime(Instant.now());
+        initReadings(ProducerEnum.FUELREADER);
+        readings.setFromTime(Instant.now());
+        readings.setProducerType(ProducerEnum.FUELREADER);
+
+
+        iotMockMVC
+                .perform(post("/relay42/iot/median")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(readings)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Invalid Time Range passed"))
+                .andExpect(jsonPath("$.errorKey").value("End time cannot be before the Start time"));
+    }
+
+
+
+    @Test
+    public void findMedianWithNoProducerTypeAndStationId() throws Exception {
+        ReadingsDTO readings = new ReadingsDTO();
+        readings.setToTime(Instant.now());
+        initReadings(ProducerEnum.FUELREADER);
+        readings.setFromTime(Instant.now());
+
+
+        iotMockMVC
+                .perform(post("/relay42/iot/median")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(TestUtil.convertObjectToJsonBytes(readings)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.title").value("Invalid input passed"))
+                .andExpect(jsonPath("$.errorKey").value("SensorId and ProducerType cannot be empty"));
     }
 }

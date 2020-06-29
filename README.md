@@ -18,7 +18,7 @@ Download the project from the github and make sure that Maven/Docker installed. 
 1. Maven Install - !(https://www.baeldung.com/install-maven-on-windows-linux-mac#:~:text=Installing%20Maven%20on%20Mac%20OS,%3A%20apache%2Dmaven%2D3.3.)
 2. Docker Install - !(https://docs.docker.com/desktop/)
 
-Cassandra will be installed in the machine  and started automatically when you run scripts. Instructions given below
+Cassandra will be started in docker container automatically when you run scripts. Instructions given below
 
 #Run Scripts
 **Build Application**
@@ -84,8 +84,39 @@ Below are the sample curl commands for different sensor. You can use sensor id f
  curl --header "Content-Type: application/json"\
       --header "Authorization: Bearer <JWT_TOKEN>" \
       --request POST \
-      --data '{"fromTime":"2020-06-28T12:09:05.00Z","toTime":"2020-06-28T12:15:05.00Z","producerType":"HEARTRATEMETER","sensorId":null}' \
+      --data '{"fromTime":"2020-06-28T12:09:05.00Z","toTime":"2020-06-28T12:15:05.00Z","producerType":"FUELREADER","sensorId":null}' \
       http://localhost:5678/relay42/iot/median
+```
+
+ 
+#Cassandra DB -Docker
+Since we have started the Cassandra as docker container. Please follow the below steps for querying the table through docker container.
+Keyspace creation and Table creation will be done automatically each time on start of the application. I configured schema-action as recreate_drop_unused by
+default in [src/main/resources/application.yml](src/main/resources/application.yml) file. Please check application.yml file for the cassandra configuration.
+For Mac Users , after installation]
+Get the container id for the cassandra.
+```
+docker ps
+```
+Example :
+
+|CONTAINER ID | IMAGE            | COMMAND                |  CREATED      | STATUS        | PORTS                                                  |  NAMES                           | 
+| :---:       | :---:            | :---:                  |  :---:        | :---:         | :---:                                                  |  :---:                           |  
+|9adba192a629 | cassandra:3.11.5 | "docker-entrypoint.s…" |  34 hours ago | Up 33 seconds | 0.0.0.0:7000-7001->7000-7001/tcp,0.0.0.0:9042->9042/tcp|  docker_iot-analyzer-cassandra_1 |
+
+
+Get the container id through the above command and Execute the below with replacing the container id accordingly
+```
+ docker exec -it <CONTAINER_ID> /bin/bash
+```
+
+Execute cqlsh to open the cassandra db terminal
+```$xslt
+cqlsh
+```
+Now you can see terminal with cqlsh:> after this type your keyspace(relay) to check the table values and query the data
+```$xslt
+   use relay
 ```
 #Approach
 
@@ -106,23 +137,7 @@ sensor device.
 Readings:
 Readings table will hold the reading value of each stationid. So in future even if station table structure is changed values can retrieved using stationid.
 Composite Primary key createddate(Clustered) and stationid (partitioned).
- 
-#Cassandra DB
-Keyspace creation and Table creation will be done automatically each time on start of the application. I configured schema-action as recreate_drop_unused by
-default in [src/main/resources/application.yml](src/main/resources/application.yml) file. Please check application.yml file for the cassandra configuration.
-For Mac Users , after installation
-Execute the below cmd in terminal to find the path. Example: /usr/local/bin/cassandra
-```
-which cassandra
-```
-Traverse to /usr/local path and execute cqlsh to open the cassandra db
-```$xslt
-cqlsh
-```
-Now you can see terminal with cqlsh:> after this type your keyspace(relay) to check the table values and query the data
-```$xslt
-   use relay
-```
+
 ##Reactive Spring
 Spring WebFlux internally uses Project Reactor and its publisher implementations – Flux and Mono. We can achieve Publisher/Consumer concept
 using Spring Reactive. Configured 3 publisher(HearRateMeter/FuelReader/Thermostat) which will produce value for each second. Consumer will listen to the
