@@ -18,5 +18,4 @@ import java.util.UUID;
 @Setter
 public class StationDetailsMap {
     private EnumMap<ProducerEnum, UUID> stationIdMap;
-
 }

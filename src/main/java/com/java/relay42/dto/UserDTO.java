@@ -10,6 +10,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -18,12 +19,12 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserDTO {
-
+public class UserDTO implements Serializable {
 
     public static final int PASSWORD_MIN_LENGTH = 4;
 
     public static final int PASSWORD_MAX_LENGTH = 100;
+    private static final long serialVersionUID = -7625051385555824365L;
 
     private String id;
 

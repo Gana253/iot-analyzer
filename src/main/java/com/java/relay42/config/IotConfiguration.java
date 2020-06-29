@@ -2,9 +2,8 @@ package com.java.relay42.config;
 
 
 import com.java.relay42.service.IotService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +16,9 @@ import org.springframework.web.reactive.function.client.WebClient;
  */
 @Configuration
 public class IotConfiguration {
-    Logger logger = LoggerFactory.getLogger(IotConfiguration.class);
+
+    public static final String PUBLISHER = "http://localhost:5678/publisher";
+
 
     @Autowired
     private IotService iotService;
@@ -29,7 +30,7 @@ public class IotConfiguration {
      */
     @Bean
     WebClient getWebClient() {
-        return WebClient.create("http://localhost:5678/publisher");
+        return WebClient.create(PUBLISHER);
     }
 
     /**

@@ -13,7 +13,6 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends CassandraRepository<User, String> {
 
-
     @AllowFiltering
     Optional<User> findOneByLogin(String login);
 

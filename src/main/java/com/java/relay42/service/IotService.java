@@ -4,11 +4,11 @@ import com.datastax.driver.core.utils.UUIDs;
 import com.java.relay42.config.ProducerEnum;
 import com.java.relay42.config.StationDetailsMap;
 import com.java.relay42.dto.UserDTO;
-import com.java.relay42.entity.Sensor;
 import com.java.relay42.entity.Readings;
 import com.java.relay42.entity.ReadingsPrimaryKey;
-import com.java.relay42.repository.SensorRepository;
+import com.java.relay42.entity.Sensor;
 import com.java.relay42.repository.ReadingsRepository;
+import com.java.relay42.repository.SensorRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,10 +49,10 @@ public class IotService {
     private StationDetailsMap stationDetailsMap;
 
     @Value("${inputfile.user-name}")
-    private String userFilePath; //Csv file input path
+    private String userFilePath;
 
     @Value("${inputfile.sensor-name}")
-    private String sensorFilePath; //Csv file input path
+    private String sensorFilePath;
 
     /**
      * Load User data and Sensor data on startup
@@ -60,7 +60,9 @@ public class IotService {
      * @throws IOException when CSV file is not found
      */
     public void loadUsersAndSensorData() throws IOException {
+        //Load User from the user.csv file and persist in table
         saveUserData();
+        //Load sensor from the sensorlist.csv file and persist in table
         loadSensorData();
     }
 
@@ -76,16 +78,11 @@ public class IotService {
         readingObj.setReading(Double.valueOf(reading));
 
         readingObj.setKey(new ReadingsPrimaryKey(stationDetailsMap.getStationIdMap().get(stationType)));
-        log.debug("Reading object to be store --{}",readingObj);
+        log.debug("Reading object to be store --{}", readingObj);
         readingsRepository.save(readingObj);
 
     }
 
-    /**
-     * Load sensor from the sensorlist.csv file and persist in table
-     *
-     * @throws IOException when file is not found
-     */
     private void loadSensorData() throws IOException {
         Resource sensorResource = null;
 
@@ -119,9 +116,9 @@ public class IotService {
                                 break;
                         }
                     }
-                    //
+                    //Track the station details data with station id
                     setStationDetails(sensor);
-                    log.debug("Sensor object to be stored --{}",sensor);
+                    log.debug("Sensor object to be stored --{}", sensor);
                     sensorRepository.save(sensor);
                 });
             }
@@ -133,11 +130,6 @@ public class IotService {
         }
     }
 
-    /**
-     * Track the station details data with station id
-     *
-     * @param sensor Sensor with SensorName(Thermostat,FuelReading,HearRateReader) and Station ID
-     */
     private void setStationDetails(Sensor sensor) {
         log.info("updating the tracker object with {}", sensor.getStationName());
         EnumMap<ProducerEnum, UUID> stationMap = fetchStationMap();
@@ -153,11 +145,6 @@ public class IotService {
     }
 
 
-    /**
-     * Load User from the user.csv file and persist in table
-     *
-     * @throws IOException when file is not found
-     */
     private void saveUserData() throws IOException {
         Resource userResource = null;
 
@@ -195,7 +182,7 @@ public class IotService {
                                 break;
                         }
                     }
-                    log.debug("User object to be stored --{}",user);
+                    log.debug("User object to be stored --{}", user);
                     userService.registerUser(user);
                 });
             }
