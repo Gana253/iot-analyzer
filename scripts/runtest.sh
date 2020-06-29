@@ -1,4 +1,4 @@
-@echo off
+pwd@echo off
 echo Starting Test Case Run...
 cd ../
 mvn test > testRunConsoleOutput.txt

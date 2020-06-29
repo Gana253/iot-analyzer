@@ -22,15 +22,18 @@ Cassandra will be started in docker container automatically when you run scripts
 
 ## Run Scripts
 **Build Application**
-For Building the application execute the build.sh file which is located in [scripts](scripts) folder. From the terminal run the below cmd
+For Building the application execute the build.sh file which is located in [scripts](scripts) folder. From the terminal run the below cmd.
+Refet to the [./consoleOutput.txt](./consoleOutput.txt) file in the project path for the execution result
 ```
+cd scripts
 ./scripts/build.sh
 
 ```
 **Test Execution**
-For running the test case execute the runtest.sh file which is located in [scripts](scripts) folder. From the terminal run the below cmd
-
+For running the test case execute the runtest.sh file which is located in [scripts](scripts) folder. From the terminal run the below cmd.
+Refer to the [./testRunConsoleOutput.txt](./testRunConsoleOutput.txt) file in the project path for the execution result.
 ```
+cd scripts
 ./scripts/runtest.sh
 
 ```

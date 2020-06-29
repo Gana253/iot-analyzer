@@ -31,8 +31,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser
 public class SensorResourceIT {
 
-    private static final String DEFAULT_DEVICE_NAME = "AAAAAAAAAA";
-    private static final String UPDATED_DEVICE_NAME = "BBBBBBBBBB";
+    private static final String DEFAULT_SENSOR_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_SENSOR_NAME = "BBBBBBBBBB";
 
     private static final String DEFAULT_CLIENT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_CLIENT_NAME = "BBBBBBBBBB";
@@ -60,7 +60,7 @@ public class SensorResourceIT {
      */
     public static Sensor createEntity() {
         Sensor sensor = new Sensor();
-        sensor.setSensorName(DEFAULT_DEVICE_NAME);
+        sensor.setSensorName(DEFAULT_SENSOR_NAME);
         sensor.setClientName(DEFAULT_CLIENT_NAME);
         sensor.setLocation(DEFAULT_LOCATION);
         sensor.setUnit(DEFAULT_UNIT);
@@ -88,7 +88,7 @@ public class SensorResourceIT {
         List<Sensor> sensorList = sensorRepository.findAll();
         assertThat(sensorList).hasSize(databaseSizeBeforeCreate + 1);
         Sensor testSensor = sensorList.get(sensorList.size() - 1);
-        assertThat(testSensor.getSensorName()).isEqualTo(DEFAULT_DEVICE_NAME);
+        assertThat(testSensor.getSensorName()).isEqualTo(DEFAULT_SENSOR_NAME);
         assertThat(testSensor.getClientName()).isEqualTo(DEFAULT_CLIENT_NAME);
         assertThat(testSensor.getLocation()).isEqualTo(DEFAULT_LOCATION);
         assertThat(testSensor.getUnit()).isEqualTo(DEFAULT_UNIT);
@@ -126,7 +126,7 @@ public class SensorResourceIT {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(sensor.getId().toString())))
-                .andExpect(jsonPath("$.[*].sensorName").value(hasItem(DEFAULT_DEVICE_NAME)))
+                .andExpect(jsonPath("$.[*].sensorName").value(hasItem(DEFAULT_SENSOR_NAME)))
                 .andExpect(jsonPath("$.[*].clientName").value(hasItem(DEFAULT_CLIENT_NAME)))
                 .andExpect(jsonPath("$.[*].location").value(hasItem(DEFAULT_LOCATION)))
                 .andExpect(jsonPath("$.[*].unit").value(hasItem(DEFAULT_UNIT)));
@@ -143,7 +143,7 @@ public class SensorResourceIT {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.id").value(sensor.getId().toString()))
-                .andExpect(jsonPath("$.sensorName").value(DEFAULT_DEVICE_NAME))
+                .andExpect(jsonPath("$.sensorName").value(DEFAULT_SENSOR_NAME))
                 .andExpect(jsonPath("$.clientName").value(DEFAULT_CLIENT_NAME))
                 .andExpect(jsonPath("$.location").value(DEFAULT_LOCATION))
                 .andExpect(jsonPath("$.unit").value(DEFAULT_UNIT));
@@ -167,7 +167,7 @@ public class SensorResourceIT {
         // Update the sensor
         Sensor updatedSensor = sensorRepository.findById(sensor.getId()).get();
 
-        updatedSensor.setSensorName(UPDATED_DEVICE_NAME);
+        updatedSensor.setSensorName(UPDATED_SENSOR_NAME);
         updatedSensor.setClientName(UPDATED_CLIENT_NAME);
         updatedSensor.setLocation(UPDATED_LOCATION);
         updatedSensor.setUnit(UPDATED_UNIT);
@@ -184,7 +184,7 @@ public class SensorResourceIT {
         List<Sensor> sensorList = sensorRepository.findAll();
         assertThat(sensorList).hasSize(databaseSizeBeforeUpdate);
         Sensor testSensor = sensorList.get(sensorList.size() - 1);
-        assertThat(testSensor.getSensorName()).isEqualTo(UPDATED_DEVICE_NAME);
+        assertThat(testSensor.getSensorName()).isEqualTo(UPDATED_SENSOR_NAME);
         assertThat(testSensor.getClientName()).isEqualTo(UPDATED_CLIENT_NAME);
         assertThat(testSensor.getLocation()).isEqualTo(UPDATED_LOCATION);
         assertThat(testSensor.getUnit()).isEqualTo(UPDATED_UNIT);
